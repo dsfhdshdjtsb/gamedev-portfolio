@@ -16,6 +16,7 @@ const backgrounds = {
 }
 
 const animatedBackgrounds = new Set(['htt', 'combat', 'ddv', 'armor'])
+const backgroundFadeDuration = 900
 
 const projects = [
   {
@@ -85,18 +86,43 @@ const projects = [
   },
 ]
 
+function BackgroundImage({ section, image, active }) {
+  const animated = animatedBackgrounds.has(section)
+  const [loaded, setLoaded] = useState(!animated || active)
+
+  useEffect(() => {
+    if (active) {
+      setLoaded(true)
+      return undefined
+    }
+
+    if (!animated || !loaded) return undefined
+
+    const unloadTimer = window.setTimeout(
+      () => setLoaded(false),
+      backgroundFadeDuration,
+    )
+
+    return () => window.clearTimeout(unloadTimer)
+  }, [active, animated, loaded])
+
+  return (
+    <div
+      className={`background__image ${active ? 'is-active' : ''}`}
+      style={{ backgroundImage: loaded ? `url(${image})` : 'none' }}
+    />
+  )
+}
+
 function Background({ activeSection, projectFocused }) {
   return (
     <div className={`background ${projectFocused ? 'is-project-focused' : ''}`} aria-hidden="true">
       {Object.entries(backgrounds).map(([section, image]) => (
-        <div
-          className={`background__image ${activeSection === section ? 'is-active' : ''}`}
+        <BackgroundImage
+          active={activeSection === section}
+          image={image}
           key={section}
-          style={{
-            backgroundImage: !animatedBackgrounds.has(section) || activeSection === section
-              ? `url(${image})`
-              : 'none',
-          }}
+          section={section}
         />
       ))}
       <div className="background__shade" />
@@ -254,12 +280,13 @@ function App() {
           <div className="experience__content">
             <section className="background-section">
               <h2>My Background</h2>
+              <h3 className="timeline__heading">Work</h3>
               <div className="timeline">
                 <article className="timeline__item">
                   <p className="timeline__date">September 2026 — December 2026</p>
                   <div className="timeline__dot" aria-hidden="true" />
                   <div className="timeline__entry">
-                    <h3>Cloudflare</h3>
+                    <h4>Cloudflare</h4>
                     <p className="timeline__title">Software Engineer Intern</p>
                   </div>
                 </article>
@@ -267,16 +294,17 @@ function App() {
                   <p className="timeline__date">May 2026 — August 2026</p>
                   <div className="timeline__dot" aria-hidden="true" />
                   <div className="timeline__entry">
-                    <h3>Sony Interactive Entertainment</h3>
+                    <h4>Sony Interactive Entertainment</h4>
                     <p className="timeline__title">Software Engineer Intern</p>
                   </div>
                 </article>
               </div>
+              <h3 className="timeline__heading timeline__heading--education">Education</h3>
               <article className="timeline__item timeline__item--isolated">
                 <p className="timeline__date">August 2023 — December 2027</p>
                 <div className="timeline__dot" aria-hidden="true" />
                 <div className="timeline__entry">
-                  <h3>Georgia Institute of Technology</h3>
+                  <h4>Georgia Institute of Technology</h4>
                   <p className="timeline__title">Bachelor of Science — Computer Science</p>
                 </div>
               </article>

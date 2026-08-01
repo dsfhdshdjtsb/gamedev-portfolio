@@ -340,6 +340,18 @@ p {
   position: relative;
 }
 
+.timeline__heading {
+  margin: 0 0 clamp(1rem, 2vw, 1.5rem);
+  color: rgba(255, 255, 255, 0.82);
+  font-size: clamp(1rem, 1.8vw, 1.25rem);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.timeline__heading--education {
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+
 .timeline::before {
   position: absolute;
   top: 0;
@@ -395,9 +407,10 @@ p {
   text-transform: uppercase;
 }
 
-.timeline__entry h3 {
+.timeline__entry h4 {
   grid-column: 2;
   grid-row: 2;
+  margin-top: 0;
   margin-bottom: 0.35rem;
   font-size: clamp(1.25rem, 2.5vw, 1.8rem);
   font-weight: 500;
@@ -413,7 +426,7 @@ p {
 }
 
 .timeline__item--isolated {
-  margin-top: clamp(3rem, 6vw, 5rem);
+  margin-top: 0;
 }
 
 .timeline__item--isolated::before {
@@ -433,7 +446,7 @@ p {
 }
 
 .contact-section h2 {
-  margin-bottom: 0.75rem;
+  margin-bottom: 1.25rem;
 }
 
 .contact-section p {
