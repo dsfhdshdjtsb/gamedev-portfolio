@@ -1,33 +1,87 @@
 import { StrictMode, useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
-import httBackground from '../htt.png'
+import combatThumbnail from '../CE.png'
 import httThumbnail from '../httthumbnail.png'
 import './styles.css'
 
 const backgrounds = {
   intro: '/group.png',
   projects: '/group.png',
-  ddv: '/ddv.png',
+  htt: '/httdemo.gif',
+  combat: '/ce.gif',
+  ddv: '/ddvdemo.gif',
   dede: '/dedeback.png',
-  htt: httBackground,
+  armor: '/aa.gif',
   experience: '/group.png',
 }
 
+const animatedBackgrounds = new Set(['htt', 'combat', 'ddv', 'armor'])
+
 const projects = [
   {
+    id: 'htt',
+    title: 'How the Turntables',
+    description: [
+      'A rhythm game where you scratch notes and spin a CD as a swag DJ cat, featuring 5 original songs and 12 unique levels. The game has a steep learning curve, but its very rewarding once you get the hang of it!',
+      'Submitted to the Juniper Dev Game Jam; ranked 1st in audio, 12th overall, and was the 4th most rated game out of 3.5k entries.'
+    ],
+    thumbnail: httThumbnail,
+    url: 'https://dsfhdshdjtsb.itch.io/howtheturntables',
+    x: '6%',
+    width: '44%',
+    speed: 1.18,
+  },
+  {
+    id: 'combat',
+    title: 'Combat Enchantments',
+    description: [
+      'A Minecraft mod that adds a variety of PvPvE enchantments. Meticulously balanced for both Vanilla, Vanilla+, and heavily modded gameplay.',
+      'Combat Enchantments has been downloaded over 300k times across CurseForge and Modrinth, and has been featured in several Youtube videos and popular Modpacks.'
+    ],
+    thumbnail: combatThumbnail,
+    url: 'https://www.curseforge.com/minecraft/mc-mods/combat-enchantments',
+    x: '54%',
+    width: '40%',
+    speed: 1.08,
+  },
+  {
     id: 'ddv',
-    title: 'DDV',
+    title: 'Dungeon Deja Vu',
+    description: [
+      'A puzzle platformer featuring a cyclical twist: each level loops back on itself! For this jam, I stepped out of my comfort zone and drew all the assets myself.',
+      'Submitted to Bevy Jam #5; ranked 3rd in game design and 8th overall out of 77 entries.'
+    ],
     thumbnail: '/ddvthumbnail.png',
+    url: 'https://dsfhdshdjtsb.itch.io/dungeon-deja-vu',
+    x: '11%',
+    width: '46%',
+    speed: 0.88,
   },
   {
     id: 'dede',
-    title: 'DEDE',
+    title: "Dede's Dilation Diner",
+    description: [
+      'A unique cooking game where you manipulate cook times by throwing food between time-dilating planets.',
+      'Submitted to GMTK 2026; ranked #35th in visuals, #124th in creativity out of over 10k entries.'
+    ],
     thumbnail: '/dedethumbnail.png',
+    url: 'https://dsfhdshdjtsb.itch.io/dedes-dilation-diner',
+    x: '57%',
+    width: '42%',
+    speed: 1.12,
   },
   {
-    id: 'htt',
-    title: 'HTT',
-    thumbnail: httThumbnail,
+    id: 'armor',
+    title: 'Armor Abilities',
+    description: [
+      'Another Minecraft mod, this time with abilities that are activatable by button press. With up to 4 abilities available at a time, this mod drastically changes the combat flow of Vanilla Minecraft.',
+      'Armor Abilities has been downloaded around 40k times across CurseForge and Modrinth.'
+    ],
+    thumbnail: '/aathumbnail.png',
+    url: 'https://www.curseforge.com/minecraft/mc-mods/armor-abilities',
+    x: '5%',
+    width: '43%',
+    speed: 0.82,
   },
 ]
 
@@ -38,7 +92,11 @@ function Background({ activeSection, projectFocused }) {
         <div
           className={`background__image ${activeSection === section ? 'is-active' : ''}`}
           key={section}
-          style={{ backgroundImage: `url(${image})` }}
+          style={{
+            backgroundImage: !animatedBackgrounds.has(section) || activeSection === section
+              ? `url(${image})`
+              : 'none',
+          }}
         />
       ))}
       <div className="background__shade" />
@@ -48,10 +106,15 @@ function Background({ activeSection, projectFocused }) {
 
 function Project({ project, activeProject, onActivate, onDeactivate }) {
   return (
-    <article
+    <a
       className={`project__card ${activeProject && activeProject !== project.id ? 'is-dimmed' : ''}`}
+      href={project.url}
       id={project.id}
-      tabIndex="0"
+      data-project-card={project.id}
+      data-speed={project.speed}
+      style={{ '--project-x': project.x, '--project-width': project.width }}
+      target="_blank"
+      rel="noreferrer"
       onMouseEnter={() => onActivate(project.id)}
       onMouseLeave={(event) => {
         if (!event.currentTarget.matches(':focus')) onDeactivate()
@@ -68,26 +131,12 @@ function Project({ project, activeProject, onActivate, onDeactivate }) {
       </div>
       <div className="project__copy">
         <h2>{project.title}</h2>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua.
-        </p>
-        <dl className="metadata">
-          <div>
-            <dt>Date</dt>
-            <dd>Lorem ipsum</dd>
-          </div>
-          <div>
-            <dt>Role</dt>
-            <dd>Lorem ipsum</dd>
-          </div>
-          <div>
-            <dt>Tech</dt>
-            <dd>Lorem ipsum</dd>
-          </div>
-        </dl>
+        {project.description.map((paragraph, index) => (
+          <p key={index}>{paragraph}</p>
+        ))}
       </div>
-    </article>
+      <p className="project__link-hint"><em>Click to go to game page</em></p>
+    </a>
   )
 }
 
@@ -112,6 +161,61 @@ function App() {
     return () => observer.disconnect()
   }, [])
 
+  useEffect(() => {
+    const cards = [...document.querySelectorAll('[data-project-card]')]
+    const field = document.querySelector('.projects__field')
+    const projectsSection = document.querySelector('.projects')
+    const background = document.querySelector('.background')
+    let frame
+
+    const updateProjects = () => {
+      frame = null
+      const viewportCenter = window.innerHeight / 2
+      const pageCenter = window.scrollY + viewportCenter
+      const fieldTop = field.getBoundingClientRect().top + window.scrollY
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      const blurEnd = Math.max(projectsSection.offsetTop - window.innerHeight * 0.35, 1)
+      const blurProgress = Math.max(0, Math.min(1, window.scrollY / blurEnd))
+      let nearestCard
+      let nearestDistance = Infinity
+
+      background.style.setProperty('--scroll-blur', `${3 + blurProgress * 15}px`)
+
+      cards.forEach((card) => {
+        const speed = Number(card.dataset.speed)
+        const cardCenter = fieldTop + card.offsetTop + card.offsetHeight / 2
+        const parallaxY = reduceMotion
+          ? 0
+          : Math.max(-260, Math.min(260, (pageCenter - cardCenter) * (1 - speed)))
+        const renderedCenter = cardCenter - window.scrollY + parallaxY
+        const distance = Math.abs(viewportCenter - renderedCenter)
+
+        card.style.setProperty('--parallax-y', `${parallaxY}px`)
+
+        if (distance < nearestDistance) {
+          nearestDistance = distance
+          nearestCard = card
+        }
+      })
+
+      cards.forEach((card) => card.classList.toggle('is-centered', card === nearestCard))
+    }
+
+    const queueUpdate = () => {
+      if (!frame) frame = requestAnimationFrame(updateProjects)
+    }
+
+    updateProjects()
+    window.addEventListener('scroll', queueUpdate, { passive: true })
+    window.addEventListener('resize', queueUpdate)
+
+    return () => {
+      window.removeEventListener('scroll', queueUpdate)
+      window.removeEventListener('resize', queueUpdate)
+      if (frame) cancelAnimationFrame(frame)
+    }
+  }, [])
+
   return (
     <>
       <Background activeSection={activeBackground} projectFocused={Boolean(activeProject)} />
@@ -120,20 +224,20 @@ function App() {
           <div className="intro__content">
             <img className="portrait" src="/me.jpg" alt="Portrait" />
             <div className="intro__copy">
-              <p className="eyebrow">Game developer portfolio</p>
-              <h1>Hello.</h1>
+              <h1>Hi, I&apos;m Nick, I make games.</h1>
+              <p>I&apos;m currently a 4th year CS student at Georgia Tech, and a former Sony intern. I enjoy making and playing difficult games.</p>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-                ad minim veniam, quis nostrud exercitation ullamco laboris.
+                Some of my favorite games include Dark Souls 3, Ghost of Tsushima, FTL,
+                and League of Legends.
               </p>
+              <p>I go by dsfhdshdjtsb online.</p>
             </div>
           </div>
         </section>
 
         <section className="projects" data-section="projects">
-          <div className="section-label">Selected projects</div>
-          <div className="projects__grid">
+          <h2 className="projects__title">My games</h2>
+          <div className="projects__field">
             {projects.map((project) => (
               <Project
                 project={project}
@@ -148,25 +252,60 @@ function App() {
 
         <section className="section experience" data-section="experience">
           <div className="experience__content">
-            <p className="eyebrow">Background</p>
-            <h2>Experience &amp; Education</h2>
-            <div className="experience__grid">
-              <article>
-                <h3>Work Experience</h3>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-                  eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                </p>
+            <section className="background-section">
+              <h2>My Background</h2>
+              <div className="timeline">
+                <article className="timeline__item">
+                  <p className="timeline__date">September 2026 — December 2026</p>
+                  <div className="timeline__dot" aria-hidden="true" />
+                  <div className="timeline__entry">
+                    <h3>Cloudflare</h3>
+                    <p className="timeline__title">Software Engineer Intern</p>
+                  </div>
+                </article>
+                <article className="timeline__item">
+                  <p className="timeline__date">May 2026 — August 2026</p>
+                  <div className="timeline__dot" aria-hidden="true" />
+                  <div className="timeline__entry">
+                    <h3>Sony Interactive Entertainment</h3>
+                    <p className="timeline__title">Software Engineer Intern</p>
+                  </div>
+                </article>
+              </div>
+              <article className="timeline__item timeline__item--isolated">
+                <p className="timeline__date">August 2023 — December 2027</p>
+                <div className="timeline__dot" aria-hidden="true" />
+                <div className="timeline__entry">
+                  <h3>Georgia Institute of Technology</h3>
+                  <p className="timeline__title">Bachelor of Science — Computer Science</p>
+                </div>
               </article>
-              <article>
-                <h3>Education</h3>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-                  eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                </p>
-              </article>
-            </div>
+            </section>
+
+            <section className="contact-section">
+              <h2>Contact Me</h2>
+              <p>
+                You can contact me through{' '}
+                <a href="https://discord.com/users/395005138000936960" target="_blank" rel="noreferrer">Discord</a>,{' '}
+                <a href="mailto:nicksuh@gatech.edu">email</a>, or{' '}
+                <a href="https://linkedin.com/in/nsuh" target="_blank" rel="noreferrer">LinkedIn</a>.
+                <br />
+                You can also view my{' '}
+                <a href="https://dsfhdshdjtsb.itch.io/" target="_blank" rel="noreferrer">Itch</a> or{' '}
+                <a href="https://github.com/dsfhdshdjtsb" target="_blank" rel="noreferrer">GitHub</a>.
+              </p>
+            </section>
           </div>
+          <p className="background-credit">
+            <em>
+              Background image made as a{' '}
+              <a href="https://sdahc.itch.io/the-group-photo" target="_blank" rel="noreferrer">
+                commemoration
+              </a>{' '}
+              of the Juniper Dev Game Jam by its community. My contribution is the headphone cat at the bottom of the screen,
+              to the right of the middle.
+            </em>
+          </p>
         </section>
       </main>
     </>
