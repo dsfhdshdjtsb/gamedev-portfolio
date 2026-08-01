@@ -1,11 +1,15 @@
 import { StrictMode, useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
+import httBackground from '../htt.png'
+import httThumbnail from '../httthumbnail.png'
 import './styles.css'
 
 const backgrounds = {
   intro: '/group.png',
+  projects: '/group.png',
   ddv: '/ddv.png',
   dede: '/dedeback.png',
+  htt: httBackground,
   experience: '/group.png',
 }
 
@@ -20,11 +24,16 @@ const projects = [
     title: 'DEDE',
     thumbnail: '/dedethumbnail.png',
   },
+  {
+    id: 'htt',
+    title: 'HTT',
+    thumbnail: httThumbnail,
+  },
 ]
 
-function Background({ activeSection }) {
+function Background({ activeSection, projectFocused }) {
   return (
-    <div className="background" aria-hidden="true">
+    <div className={`background ${projectFocused ? 'is-project-focused' : ''}`} aria-hidden="true">
       {Object.entries(backgrounds).map(([section, image]) => (
         <div
           className={`background__image ${activeSection === section ? 'is-active' : ''}`}
@@ -37,46 +46,55 @@ function Background({ activeSection }) {
   )
 }
 
-function Project({ project, index }) {
+function Project({ project, activeProject, onActivate, onDeactivate }) {
   return (
-    <section className="section project" data-section={project.id} id={project.id}>
-      <article className="project__card">
-        <div className="project__number">0{index + 1}</div>
-        <div className="project__image-wrap">
-          <img
-            className="project__image"
-            src={project.thumbnail}
-            alt={`${project.title} project thumbnail`}
-          />
-        </div>
-        <div className="project__copy">
-          <h2>{project.title}</h2>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
-            tempor incididunt ut labore et dolore magna aliqua.
-          </p>
-          <dl className="metadata">
-            <div>
-              <dt>Date</dt>
-              <dd>Lorem ipsum</dd>
-            </div>
-            <div>
-              <dt>Role</dt>
-              <dd>Lorem ipsum</dd>
-            </div>
-            <div>
-              <dt>Tech</dt>
-              <dd>Lorem ipsum</dd>
-            </div>
-          </dl>
-        </div>
-      </article>
-    </section>
+    <article
+      className={`project__card ${activeProject && activeProject !== project.id ? 'is-dimmed' : ''}`}
+      id={project.id}
+      tabIndex="0"
+      onMouseEnter={() => onActivate(project.id)}
+      onMouseLeave={(event) => {
+        if (!event.currentTarget.matches(':focus')) onDeactivate()
+      }}
+      onFocus={() => onActivate(project.id)}
+      onBlur={onDeactivate}
+    >
+      <div className="project__image-wrap">
+        <img
+          className="project__image"
+          src={project.thumbnail}
+          alt={`${project.title} project thumbnail`}
+        />
+      </div>
+      <div className="project__copy">
+        <h2>{project.title}</h2>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
+          tempor incididunt ut labore et dolore magna aliqua.
+        </p>
+        <dl className="metadata">
+          <div>
+            <dt>Date</dt>
+            <dd>Lorem ipsum</dd>
+          </div>
+          <div>
+            <dt>Role</dt>
+            <dd>Lorem ipsum</dd>
+          </div>
+          <div>
+            <dt>Tech</dt>
+            <dd>Lorem ipsum</dd>
+          </div>
+        </dl>
+      </div>
+    </article>
   )
 }
 
 function App() {
   const [activeSection, setActiveSection] = useState('intro')
+  const [activeProject, setActiveProject] = useState(null)
+  const activeBackground = activeProject ?? activeSection
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -96,7 +114,7 @@ function App() {
 
   return (
     <>
-      <Background activeSection={activeSection} />
+      <Background activeSection={activeBackground} projectFocused={Boolean(activeProject)} />
       <main>
         <section className="section intro" data-section="intro">
           <div className="intro__content">
@@ -113,10 +131,20 @@ function App() {
           </div>
         </section>
 
-        <div className="section-label">Selected projects</div>
-        {projects.map((project, index) => (
-          <Project project={project} index={index} key={project.id} />
-        ))}
+        <section className="projects" data-section="projects">
+          <div className="section-label">Selected projects</div>
+          <div className="projects__grid">
+            {projects.map((project) => (
+              <Project
+                project={project}
+                activeProject={activeProject}
+                onActivate={setActiveProject}
+                onDeactivate={() => setActiveProject(null)}
+                key={project.id}
+              />
+            ))}
+          </div>
+        </section>
 
         <section className="section experience" data-section="experience">
           <div className="experience__content">
