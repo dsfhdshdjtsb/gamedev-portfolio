@@ -282,7 +282,7 @@ p {
 
 #htt .project__image {
   aspect-ratio: 16 / 10;
-  object-position: 44% center;
+  object-position: left center;
 }
 
 #ddv .project__image {
