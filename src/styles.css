@@ -244,14 +244,21 @@ p {
 
 .project__image-wrap::after {
   position: absolute;
-  right: 0.65rem;
+  left: 0.65rem;
   bottom: 0.65rem;
   width: 1.5rem;
   height: 1.5rem;
-  border-right: 1px solid rgba(255, 255, 255, 0.78);
+  border-left: 1px solid rgba(255, 255, 255, 0.78);
   border-bottom: 1px solid rgba(255, 255, 255, 0.78);
   content: '';
   pointer-events: none;
+}
+
+.project__card:nth-child(even) .project__image-wrap::after {
+  right: 0.65rem;
+  left: auto;
+  border-right: 1px solid rgba(255, 255, 255, 0.78);
+  border-left: 0;
 }
 
 .project__card:hover .project__image-wrap,
