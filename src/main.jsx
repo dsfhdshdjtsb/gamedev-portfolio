@@ -305,7 +305,7 @@ function App() {
                 <div className="timeline__dot" aria-hidden="true" />
                 <div className="timeline__entry">
                   <h4>Georgia Institute of Technology</h4>
-                  <p className="timeline__title">Bachelor of Science — Computer Science</p>
+                  <p className="timeline__title">Bachelor of Science, Computer Science</p>
                 </div>
               </article>
             </section>
