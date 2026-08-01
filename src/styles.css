@@ -55,6 +55,12 @@ img {
   opacity: 1;
 }
 
+.background__video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .background__shade {
   position: absolute;
   inset: 0;
@@ -527,7 +533,8 @@ p {
 
   .project__card {
     width: calc(100% - 2rem);
-    margin-top: 2.75rem;
+    margin-top: 4rem;
+    margin-bottom: 4rem;
     margin-left: 1rem;
     padding-bottom: 0;
     transform: none;
@@ -535,11 +542,11 @@ p {
   }
 
   .project__card + .project__card {
-    margin-top: 2.75rem;
+    margin-top: 4rem;
   }
 
   #dede {
-    margin-top: 2.75rem;
+    margin-top: 4rem;
   }
 
   .project__image-wrap,

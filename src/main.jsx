@@ -7,16 +7,34 @@ import './styles.css'
 const backgrounds = {
   intro: '/group.png',
   projects: '/group.png',
-  htt: '/httdemo.gif',
-  combat: '/ce.gif',
-  ddv: '/ddvdemo.gif',
+  htt: null,
+  combat: null,
+  ddv: null,
   dede: '/dedeback.png',
-  armor: '/aa.gif',
+  armor: null,
   experience: '/group.png',
 }
 
 const animatedBackgrounds = new Set(['htt', 'combat', 'ddv', 'armor'])
 const backgroundFadeDuration = 900
+const videoBackgrounds = {
+  htt: [
+    { src: '/httdemo.webm', type: 'video/webm' },
+    { src: '/httdemo.mp4', type: 'video/mp4' },
+  ],
+  combat: [
+    { src: '/ce.webm', type: 'video/webm' },
+    { src: '/ce.mp4', type: 'video/mp4' },
+  ],
+  ddv: [
+    { src: '/ddvdemo.webm', type: 'video/webm' },
+    { src: '/ddvdemo.mp4', type: 'video/mp4' },
+  ],
+  armor: [
+    { src: '/aa.webm', type: 'video/webm' },
+    { src: '/aa.mp4', type: 'video/mp4' },
+  ],
+}
 
 const projects = [
   {
@@ -86,9 +104,12 @@ const projects = [
   },
 ]
 
-function BackgroundImage({ section, image, active }) {
+function BackgroundLayer({ section, image, active }) {
   const animated = animatedBackgrounds.has(section)
+  const videoSources = videoBackgrounds[section]
+  const isVideo = Boolean(videoSources)
   const [loaded, setLoaded] = useState(!animated || active)
+  const [ready, setReady] = useState(!isVideo)
 
   useEffect(() => {
     if (active) {
@@ -99,18 +120,38 @@ function BackgroundImage({ section, image, active }) {
     if (!animated || !loaded) return undefined
 
     const unloadTimer = window.setTimeout(
-      () => setLoaded(false),
+      () => {
+        setLoaded(false)
+        if (isVideo) setReady(false)
+      },
       backgroundFadeDuration,
     )
 
     return () => window.clearTimeout(unloadTimer)
-  }, [active, animated, loaded])
+  }, [active, animated, isVideo, loaded])
 
   return (
     <div
-      className={`background__image ${active ? 'is-active' : ''}`}
-      style={{ backgroundImage: loaded ? `url(${image})` : 'none' }}
-    />
+      className={`background__image ${active && ready ? 'is-active' : ''}`}
+      style={{ backgroundImage: loaded && !isVideo ? `url(${image})` : 'none' }}
+    >
+      {loaded && isVideo && (
+        <video
+          autoPlay
+          className="background__video"
+          disablePictureInPicture
+          loop
+          muted
+          onCanPlay={() => setReady(true)}
+          playsInline
+          preload="auto"
+        >
+          {videoSources.map(({ src, type }) => (
+            <source key={src} src={src} type={type} />
+          ))}
+        </video>
+      )}
+    </div>
   )
 }
 
@@ -118,7 +159,7 @@ function Background({ activeSection, projectFocused }) {
   return (
     <div className={`background ${projectFocused ? 'is-project-focused' : ''}`} aria-hidden="true">
       {Object.entries(backgrounds).map(([section, image]) => (
-        <BackgroundImage
+        <BackgroundLayer
           active={activeSection === section}
           image={image}
           key={section}
@@ -192,6 +233,8 @@ function App() {
     const field = document.querySelector('.projects__field')
     const projectsSection = document.querySelector('.projects')
     const background = document.querySelector('.background')
+    const mobileQuery = window.matchMedia('(max-width: 760px)')
+    let projectActivatedByScroll = false
     let frame
 
     const updateProjects = () => {
@@ -200,6 +243,7 @@ function App() {
       const pageCenter = window.scrollY + viewportCenter
       const fieldTop = field.getBoundingClientRect().top + window.scrollY
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      const isMobile = mobileQuery.matches
       const blurEnd = Math.max(projectsSection.offsetTop - window.innerHeight * 0.35, 1)
       const blurProgress = Math.max(0, Math.min(1, window.scrollY / blurEnd))
       let nearestCard
@@ -210,7 +254,7 @@ function App() {
       cards.forEach((card) => {
         const speed = Number(card.dataset.speed)
         const cardCenter = fieldTop + card.offsetTop + card.offsetHeight / 2
-        const parallaxY = reduceMotion
+        const parallaxY = reduceMotion || isMobile
           ? 0
           : Math.max(-260, Math.min(260, (pageCenter - cardCenter) * (1 - speed)))
         const renderedCenter = cardCenter - window.scrollY + parallaxY
@@ -225,6 +269,20 @@ function App() {
       })
 
       cards.forEach((card) => card.classList.toggle('is-centered', card === nearestCard))
+
+      if (isMobile) {
+        const projectsRect = projectsSection.getBoundingClientRect()
+        const projectsAreCentered = projectsRect.top <= viewportCenter
+          && projectsRect.bottom >= viewportCenter
+
+        setActiveProject(
+          projectsAreCentered && nearestCard ? nearestCard.dataset.projectCard : null,
+        )
+        projectActivatedByScroll = projectsAreCentered
+      } else if (projectActivatedByScroll) {
+        setActiveProject(null)
+        projectActivatedByScroll = false
+      }
     }
 
     const queueUpdate = () => {
