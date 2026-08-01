@@ -1,0 +1,259 @@
+:root {
+  color: #f5f5f2;
+  background: #090909;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+.background {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background: #090909;
+}
+
+.background__image {
+  position: absolute;
+  inset: -3rem;
+  background-position: center;
+  background-size: cover;
+  filter: blur(10px);
+  opacity: 0;
+  transform: scale(1.08);
+  transition: opacity 900ms ease;
+}
+
+.background__image.is-active {
+  opacity: 1;
+}
+
+.background__shade {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.58);
+}
+
+.section {
+  min-height: 100svh;
+  padding: clamp(2rem, 7vw, 7rem);
+  display: grid;
+  place-items: center;
+}
+
+.intro__content,
+.project__card,
+.experience__content {
+  width: min(1120px, 100%);
+  margin: auto;
+}
+
+.intro__content {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.72fr) 1fr;
+  align-items: center;
+  gap: clamp(2rem, 7vw, 7rem);
+}
+
+.portrait {
+  width: 100%;
+  max-height: 68svh;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  object-position: center;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.eyebrow,
+.section-label,
+.project__number,
+dt {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.66);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1,
+h2 {
+  margin-bottom: 1.25rem;
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 0.95;
+}
+
+h1 {
+  margin-top: 0.75rem;
+  font-size: clamp(4rem, 10vw, 8.5rem);
+}
+
+h2 {
+  font-size: clamp(3rem, 7vw, 6rem);
+}
+
+h3 {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+p {
+  max-width: 58ch;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  line-height: 1.7;
+}
+
+.section-label {
+  width: min(1120px, calc(100% - 4rem));
+  margin: 0 auto;
+  padding-top: 3rem;
+}
+
+.project__card,
+.experience__content {
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(8, 8, 8, 0.72);
+  backdrop-filter: blur(18px);
+}
+
+.project__card {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: clamp(1.5rem, 5vw, 4.5rem);
+  align-items: center;
+  position: relative;
+}
+
+.project__number {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+}
+
+.project__image-wrap {
+  overflow: hidden;
+  background: #111;
+}
+
+.project__image {
+  width: 100%;
+  height: clamp(280px, 55svh, 610px);
+  object-fit: cover;
+}
+
+.metadata {
+  display: grid;
+  gap: 0;
+  margin: 2.5rem 0 0;
+}
+
+.metadata div {
+  display: grid;
+  grid-template-columns: 5rem 1fr;
+  padding: 0.85rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+dt,
+dd {
+  margin: 0;
+}
+
+dd {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.88rem;
+}
+
+.experience__content h2 {
+  margin-top: 0.85rem;
+}
+
+.experience__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(2rem, 7vw, 7rem);
+  margin-top: clamp(3rem, 8vw, 7rem);
+}
+
+.experience__grid article {
+  border-top: 1px solid rgba(255, 255, 255, 0.24);
+  padding-top: 1.2rem;
+}
+
+.experience__grid p {
+  font-size: 1rem;
+}
+
+@media (max-width: 760px) {
+  .section {
+    min-height: auto;
+    padding: 5rem 1.25rem;
+  }
+
+  .intro {
+    min-height: 100svh;
+  }
+
+  .intro__content,
+  .project__card,
+  .experience__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .portrait {
+    width: min(100%, 340px);
+    max-height: 52svh;
+  }
+
+  .project {
+    min-height: 100svh;
+  }
+
+  .project__image {
+    height: auto;
+    max-height: 48svh;
+  }
+
+  .experience__grid {
+    gap: 2rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .background__image {
+    transition: none;
+  }
+}
