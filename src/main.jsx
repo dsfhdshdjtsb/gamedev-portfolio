@@ -39,7 +39,7 @@ const projects = [
     id: 'htt',
     title: 'How the Turntables',
     description: [
-      'A rhythm game where you scratch notes and spin a CD as a swag DJ cat, featuring 5 original songs and 12 unique levels. The game has a steep learning curve, but its very rewarding once you get the hang of it!',
+      'A rhythm game where you scratch notes as a DJ cat, featuring 5 original songs and 12 unique levels. The game has a steep learning curve, but its very rewarding once you get the hang of it!',
       'Submitted to the Juniper Dev Game Jam; ranked 1st in audio, 12th overall, and was the 4th most rated game out of 3.5k entries.'
     ],
     thumbnail: '/httthumbnail.png',
@@ -52,7 +52,7 @@ const projects = [
     id: 'combat',
     title: 'Combat Enchantments',
     description: [
-      'A Minecraft mod that adds a variety of PvPvE enchantments. Meticulously balanced for both Vanilla+, and heavily modded gameplay.',
+      'A Minecraft mod that adds a variety of PvPvE enchantments. Meticulously balanced for both Vanilla+ and heavily modded gameplay.',
       'Combat Enchantments has been downloaded over 300k times across CurseForge and Modrinth, and has been featured in several Youtube videos and popular Modpacks.'
     ],
     thumbnail: '/CE.png',
