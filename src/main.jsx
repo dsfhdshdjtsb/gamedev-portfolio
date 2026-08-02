@@ -52,7 +52,7 @@ const projects = [
     id: 'combat',
     title: 'Combat Enchantments',
     description: [
-      'A Minecraft mod that adds a variety of PvPvE enchantments. Meticulously balanced for both Vanilla, Vanilla+, and heavily modded gameplay.',
+      'A Minecraft mod that adds a variety of PvPvE enchantments. Meticulously balanced for both Vanilla+, and heavily modded gameplay.',
       'Combat Enchantments has been downloaded over 300k times across CurseForge and Modrinth, and has been featured in several Youtube videos and popular Modpacks.'
     ],
     thumbnail: '/CE.png',
@@ -65,7 +65,7 @@ const projects = [
     id: 'ddv',
     title: 'Dungeon Deja Vu',
     description: [
-      'A puzzle platformer featuring a cyclical twist: each level loops back on itself! For this jam, I stepped out of my comfort zone and drew all the assets myself.',
+      'A puzzle platformer featuring a cyclical twist: each level loops back on itself! For this jam, I stepped out of my comfort zone and drew the assets myself.',
       'Submitted to Bevy Jam #5; ranked 3rd in game design and 8th overall out of 77 entries.'
     ],
     thumbnail: '/ddvthumbnail.png',
@@ -91,7 +91,7 @@ const projects = [
     id: 'armor',
     title: 'Armor Abilities',
     description: [
-      'Another Minecraft mod, this time with abilities that are activatable by button press. With up to 4 abilities available at a time, this mod drastically changes the combat flow of Vanilla Minecraft.',
+      'Another Minecraft mod, this time with abilities that are activatable by button press. With up to 4 abilities available at a time, this mod drastically changes the combat flow of vanilla Minecraft.',
       'Armor Abilities has been downloaded around 40k times across CurseForge and Modrinth.'
     ],
     thumbnail: '/aathumbnail.png',

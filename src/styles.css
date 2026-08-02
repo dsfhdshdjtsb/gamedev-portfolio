@@ -31,9 +31,15 @@ img {
 .background {
   position: fixed;
   inset: 0;
-  z-index: -1;
+  z-index: 0;
   overflow: hidden;
   background: #090909;
+  pointer-events: none;
+}
+
+main {
+  position: relative;
+  z-index: 1;
 }
 
 .background__image {
@@ -502,6 +508,13 @@ p {
 }
 
 @media (max-width: 760px) {
+  .background {
+    inset: 0 0 auto;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+  }
+
   .section {
     min-height: auto;
     padding: 4rem 1rem;
