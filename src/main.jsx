@@ -104,6 +104,7 @@ const projects = [
 
 function BackgroundLayer({ section, image, active }) {
   const animated = animatedBackgrounds.has(section)
+  const isProject = projects.some((project) => project.id === section)
   const videoSources = videoBackgrounds[section]
   const isVideo = Boolean(videoSources)
   const [loaded, setLoaded] = useState(!animated || active)
@@ -130,7 +131,7 @@ function BackgroundLayer({ section, image, active }) {
 
   return (
     <div
-      className={`background__image ${active && ready ? 'is-active' : ''}`}
+      className={`background__image ${isProject ? 'background__image--project' : ''} ${active && ready ? 'is-active' : ''}`}
       style={{ backgroundImage: loaded && !isVideo ? `url(${image})` : 'none' }}
     >
       {loaded && isVideo && (
@@ -208,7 +209,8 @@ function Project({ project, activeProject, onActivate, onDeactivate }) {
 function App() {
   const [activeSection, setActiveSection] = useState('intro')
   const [activeProject, setActiveProject] = useState(null)
-  const activeBackground = activeProject ?? activeSection
+  const [scrollProject, setScrollProject] = useState(null)
+  const activeBackground = scrollProject ?? activeSection
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -268,14 +270,17 @@ function App() {
 
       cards.forEach((card) => card.classList.toggle('is-centered', card === nearestCard))
 
-      if (isMobile) {
-        const projectsRect = projectsSection.getBoundingClientRect()
-        const projectsAreCentered = projectsRect.top <= viewportCenter
-          && projectsRect.bottom >= viewportCenter
+      const projectsRect = projectsSection.getBoundingClientRect()
+      const projectsAreCentered = projectsRect.top <= viewportCenter
+        && projectsRect.bottom >= viewportCenter
+      const centeredProject = projectsAreCentered && nearestCard
+        ? nearestCard.dataset.projectCard
+        : null
 
-        setActiveProject(
-          projectsAreCentered && nearestCard ? nearestCard.dataset.projectCard : null,
-        )
+      setScrollProject(centeredProject)
+
+      if (isMobile) {
+        setActiveProject(centeredProject)
         projectActivatedByScroll = projectsAreCentered
       } else if (projectActivatedByScroll) {
         setActiveProject(null)

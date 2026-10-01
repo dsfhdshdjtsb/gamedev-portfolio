@@ -53,7 +53,7 @@ main {
   transition: opacity 900ms ease, filter 600ms ease;
 }
 
-.background.is-project-focused .background__image.is-active {
+.background__image--project {
   filter: blur(3px);
 }
 
