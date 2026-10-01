@@ -380,8 +380,9 @@ function App() {
                 <a href="https://linkedin.com/in/nsuh" target="_blank" rel="noreferrer">LinkedIn</a>.
                 <br />
                 You can also view my{' '}
-                <a href="https://dsfhdshdjtsb.itch.io/" target="_blank" rel="noreferrer">Itch</a> or{' '}
-                <a href="https://github.com/dsfhdshdjtsb" target="_blank" rel="noreferrer">GitHub</a>.
+                <a href="https://dsfhdshdjtsb.itch.io/" target="_blank" rel="noreferrer">Itch</a>,{' '}
+                <a href="https://github.com/dsfhdshdjtsb" target="_blank" rel="noreferrer">GitHub</a>, or{' '}
+                <a href="/resume.pdf" target="_blank" rel="noreferrer">resume</a>.
               </p>
             </section>
           </div>
